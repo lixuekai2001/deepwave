@@ -22,7 +22,7 @@ class Propagator(deepwave.base.propagator.Propagator):
             PropagatorFunction,
             model,
             dx,
-            fd_width=2,  # also in Pml
+            fd_width=4,  # also in Pml
             pml_width=pml_width,
             survey_pad=survey_pad,
         )
@@ -358,7 +358,7 @@ def _set_wavefield_save_strategy(requires_grad, dt, inner_dt, scalar_wrapper):
 def _set_finite_diff_coeffs(ndim, dx, device, dtype):
     """Calculates coefficients for finite difference derivatives.
 
-    Currently only supports 4th order accurate derivatives.
+    Currently only supports 8th order accurate derivatives.
 
     Args:
         ndim: Int specifying number of dimensions (1, 2, or 3)
@@ -369,22 +369,22 @@ def _set_finite_diff_coeffs(ndim, dx, device, dtype):
     Returns:
         Float Tensors containing the coefficients for 1st and 2nd
             derivatives.
-        fd1: Contains 2 coefficients for each dimension
+        fd1: Contains 4 coefficients for each dimension
         fd2: Contains 1 coefficient for the central element, followed by
-            2 coefficients for each dimension
+            4 coefficients for each dimension
     """
 
-    fd1 = torch.zeros(ndim, 2, device=device, dtype=dtype)
-    fd2 = torch.zeros(ndim * 2 + 1, device=device, dtype=dtype)
+    fd1 = torch.zeros(ndim, 8, device=device, dtype=dtype)
+    fd2 = torch.zeros(ndim * 8 + 1, device=device, dtype=dtype)
     dx = dx.to(device).to(dtype)
     for dim in range(ndim):
         fd1[dim] = (
-            torch.tensor([8 / 12, -1 / 12], device=device, dtype=dtype)
+            torch.tensor([4/5, -1/5, 4/105, -1/280], device=device, dtype=dtype)
             / dx[dim]
         )
-        fd2[0] += -5 / 2 / dx[dim] ** 2
-        fd2[1 + dim * 2 : 1 + (dim + 1) * 2] = (
-            torch.tensor([4 / 3, -1 / 12], device=device, dtype=dtype)
+        fd2[0] += -205 / 72 / dx[dim] ** 2
+        fd2[1 + dim * 4 : 1 + (dim + 1) * 4] = (
+            torch.tensor([8/5, -1/5, 8/315, -1/560], device=device, dtype=dtype)
             / dx[dim] ** 2
         )
 
@@ -488,7 +488,7 @@ class Pml(object):
             sigma[-fd_pad:] = sigma[-fd_pad - 1]
             return torch.tensor(sigma).to(model.dtype).to(model.device)
 
-        fd_pad = 2
+        fd_pad = 4
         sigma = []
         self.pml_width = model.pad_width - fd_pad
         for dim in range(model.ndim):

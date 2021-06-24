@@ -456,8 +456,11 @@ void model_grad_scaling(TYPE * const model_grad,
 static inline TYPE laplacian_1d(const TYPE * const arr,
                                 const TYPE * const fd2,
                                 const ptrdiff_t si) {
-  return fd2[0] * arr[si] + fd2[1] * (arr[si + 1] + arr[si - 1]) +
-         fd2[2] * (arr[si + 2] + arr[si - 2]);
+  return fd2[0] * arr[si] +
+         fd2[1] * (arr[si + 1] + arr[si - 1]) +
+         fd2[2] * (arr[si + 2] + arr[si - 2]) +
+         fd2[3] * (arr[si + 3] + arr[si - 3]) +
+         fd2[4] * (arr[si + 4] + arr[si - 4]);
 }
 #endif
 
@@ -465,10 +468,15 @@ static inline TYPE laplacian_1d(const TYPE * const arr,
 static inline TYPE laplacian_2d(const TYPE * const arr,
                                 const TYPE * const fd2,
                                 const ptrdiff_t si, const ptrdiff_t size_x) {
-  return fd2[0] * arr[si] + fd2[1] * (arr[si + size_x] + arr[si - size_x]) +
+  return fd2[0] * arr[si] +
+         fd2[1] * (arr[si + size_x] + arr[si - size_x]) +
          fd2[2] * (arr[si + 2 * size_x] + arr[si - 2 * size_x]) +
-         +fd2[3] * (arr[si + 1] + arr[si - 1]) +
-         fd2[4] * (arr[si + 2] + arr[si - 2]);
+         fd2[3] * (arr[si + 3 * size_x] + arr[si - 4 * size_x]) +
+         fd2[4] * (arr[si + 4 * size_x] + arr[si - 3 * size_x]) +
+         fd2[5] * (arr[si + 1] + arr[si - 1]) +
+         fd2[6] * (arr[si + 2] + arr[si - 2]) +
+         fd2[7] * (arr[si + 3] + arr[si - 3]) +
+         fd2[8] * (arr[si + 4] + arr[si - 4]);
 }
 #endif
 
@@ -477,12 +485,19 @@ static inline TYPE laplacian_3d(const TYPE * const arr,
                                 const TYPE * const fd2,
                                 const ptrdiff_t si, const ptrdiff_t size_x,
                                 const ptrdiff_t size_xy) {
-  return fd2[0] * arr[si] + fd2[1] * (arr[si + size_xy] + arr[si - size_xy]) +
+  return fd2[0] * arr[si] +
+         fd2[1] * (arr[si + size_xy] + arr[si - size_xy]) +
          fd2[2] * (arr[si + 2 * size_xy] + arr[si - 2 * size_xy]) +
-         +fd2[3] * (arr[si + size_x] + arr[si - size_x]) +
-         fd2[4] * (arr[si + 2 * size_x] + arr[si - 2 * size_x]) +
-         fd2[5] * (arr[si + 1] + arr[si - 1]) +
-         fd2[6] * (arr[si + 2] + arr[si - 2]);
+         fd2[3] * (arr[si + 3 * size_xy] + arr[si - 4 * size_xy]) +
+         fd2[4] * (arr[si + 4 * size_xy] + arr[si - 3 * size_xy]) +
+         fd2[5] * (arr[si + size_x] + arr[si - size_x]) +
+         fd2[6] * (arr[si + 2 * size_x] + arr[si - 2 * size_x]) +
+         fd2[7] * (arr[si + 3 * size_x] + arr[si - 3 * size_x]) +
+         fd2[8] * (arr[si + 4 * size_x] + arr[si - 4 * size_x]) +
+         fd2[9] * (arr[si + 1] + arr[si - 1]) +
+         fd2[10] * (arr[si + 2] + arr[si - 2]) +
+         fd2[11] * (arr[si + 3] + arr[si - 3]) +
+         fd2[12] * (arr[si + 4] + arr[si - 4]);
 }
 #endif
 
@@ -490,19 +505,25 @@ static inline TYPE z_deriv(const TYPE * const arr,
                            const TYPE * const fd1,
                            const ptrdiff_t si, const ptrdiff_t size_xy) {
   return fd1[0] * (arr[si + size_xy] - arr[si - size_xy]) +
-         fd1[1] * (arr[si + 2 * size_xy] - arr[si - 2 * size_xy]);
+         fd1[1] * (arr[si + 2 * size_xy] - arr[si - 2 * size_xy]) +
+         fd1[2] * (arr[si + 3 * size_xy] - arr[si - 3 * size_xy]) +
+         fd1[3] * (arr[si + 4 * size_xy] - arr[si - 4 * size_xy]);
 }
 
 static inline TYPE y_deriv(const TYPE * const arr,
                            const TYPE * const fd1,
                            const ptrdiff_t si, const ptrdiff_t size_x) {
   return fd1[0] * (arr[si + size_x] - arr[si - size_x]) +
-         fd1[1] * (arr[si + 2 * size_x] - arr[si - 2 * size_x]);
+         fd1[1] * (arr[si + 2 * size_x] - arr[si - 2 * size_x]) +
+         fd1[2] * (arr[si + 3 * size_x] - arr[si - 3 * size_x]) +
+         fd1[3] * (arr[si + 4 * size_x] - arr[si - 4 * size_x]);
 }
 
 static inline TYPE x_deriv(const TYPE * const arr,
                            const TYPE * const fd1,
                            const ptrdiff_t si) {
   return fd1[0] * (arr[si + 1] - arr[si - 1]) +
-         fd1[1] * (arr[si + 2] - arr[si - 2]);
+         fd1[1] * (arr[si + 2] - arr[si - 2]) +
+         fd1[2] * (arr[si + 3] - arr[si - 3]) +
+         fd1[3] * (arr[si + 4] - arr[si - 4]);
 }

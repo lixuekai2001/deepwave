@@ -177,7 +177,7 @@ TYPE *set_step_pointer(const TYPE * const origin,
  * */
 #if DIM == 1
 
-#define ZPAD 2
+#define ZPAD 4
 #define YPAD 0
 #define XPAD 0
 
@@ -185,17 +185,17 @@ TYPE *set_step_pointer(const TYPE * const origin,
 
 #elif DIM == 2
 
-#define ZPAD 2
-#define YPAD 2
+#define ZPAD 4
+#define YPAD 4
 #define XPAD 0
 
 #define AUX_SIZE 2
 
 #elif DIM == 3
 
-#define ZPAD 2
-#define YPAD 2
-#define XPAD 2
+#define ZPAD 4
+#define YPAD 4
+#define XPAD 4
 
 #define AUX_SIZE 4
 
