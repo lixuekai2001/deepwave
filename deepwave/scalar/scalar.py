@@ -374,8 +374,8 @@ def _set_finite_diff_coeffs(ndim, dx, device, dtype):
             4 coefficients for each dimension
     """
 
-    fd1 = torch.zeros(ndim, 8, device=device, dtype=dtype)
-    fd2 = torch.zeros(ndim * 8 + 1, device=device, dtype=dtype)
+    fd1 = torch.zeros(ndim, 4, device=device, dtype=dtype)
+    fd2 = torch.zeros(ndim * 4 + 1, device=device, dtype=dtype)
     dx = dx.to(device).to(dtype)
     for dim in range(ndim):
         fd1[dim] = (

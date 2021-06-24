@@ -6,8 +6,8 @@
 
 #include "scalar.h"
 
-static __constant__ TYPE fd1[2 * DIM];
-static __constant__ TYPE fd2[2 * DIM + 1];
+static __constant__ TYPE fd1[4 * DIM];
+static __constant__ TYPE fd2[4 * DIM + 1];
 
 #define gpuErrchk(ans) \
   { gpuAssert((ans), __FILE__, __LINE__); }
@@ -508,8 +508,8 @@ static inline __device__ TYPE laplacian_2d(const TYPE * const arr,
   return fd2[0] * arr[si] +
          fd2[1] * (arr[si + size_x] + arr[si - size_x]) +
          fd2[2] * (arr[si + 2 * size_x] + arr[si - 2 * size_x]) +
-         fd2[3] * (arr[si + 3 * size_x] + arr[si - 4 * size_x]) +
-         fd2[4] * (arr[si + 4 * size_x] + arr[si - 3 * size_x]) +
+         fd2[3] * (arr[si + 3 * size_x] + arr[si - 3 * size_x]) +
+         fd2[4] * (arr[si + 4 * size_x] + arr[si - 4 * size_x]) +
          fd2[5] * (arr[si + 1] + arr[si - 1]) +
          fd2[6] * (arr[si + 2] + arr[si - 2]) +
          fd2[7] * (arr[si + 3] + arr[si - 3]) +
@@ -825,8 +825,8 @@ static inline __device__ TYPE laplacian_3d(const TYPE * const arr,
   return fd2[0] * arr[si] +
          fd2[1] * (arr[si + size_xy] + arr[si - size_xy]) +
          fd2[2] * (arr[si + 2 * size_xy] + arr[si - 2 * size_xy]) +
-         fd2[3] * (arr[si + 3 * size_xy] + arr[si - 4 * size_xy]) +
-         fd2[4] * (arr[si + 4 * size_xy] + arr[si - 3 * size_xy]) +
+         fd2[3] * (arr[si + 3 * size_xy] + arr[si - 3 * size_xy]) +
+         fd2[4] * (arr[si + 4 * size_xy] + arr[si - 4 * size_xy]) +
          fd2[5] * (arr[si + size_x] + arr[si - size_x]) +
          fd2[6] * (arr[si + 2 * size_x] + arr[si - 2 * size_x]) +
          fd2[7] * (arr[si + 3 * size_x] + arr[si - 3 * size_x]) +
