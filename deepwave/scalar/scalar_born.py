@@ -22,7 +22,7 @@ class BornPropagator(deepwave.base.propagator.Propagator):
             model,
             dx,
             # also in Pml, zero_edges, ...
-            fd_width=2,
+            fd_width=4,
             pml_width=pml_width,
             survey_pad=survey_pad,
         )
@@ -95,7 +95,7 @@ class BornPropagatorFunction(torch.autograd.Function):
         num_steps, num_shots, num_sources_per_shot = source_amplitudes.shape
         num_receivers_per_shot = receiver_locations.shape[1]
 
-        zero_edges(scatter, model.pad_width - 2)
+        zero_edges(scatter, model.pad_width - 4)
 
         if model.extra_info["vpmax"] is None:
             max_vel = vp.max().item()
@@ -425,17 +425,17 @@ def _set_finite_diff_coeffs(ndim, dx, device, dtype):
             2 coefficients for each dimension
     """
 
-    fd1 = torch.zeros(ndim, 2, device=device, dtype=dtype)
-    fd2 = torch.zeros(ndim * 2 + 1, device=device, dtype=dtype)
+    fd1 = torch.zeros(ndim, 4, device=device, dtype=dtype)
+    fd2 = torch.zeros(ndim * 4 + 1, device=device, dtype=dtype)
     dx = dx.to(device).to(dtype)
     for dim in range(ndim):
         fd1[dim] = (
-            torch.tensor([8 / 12, -1 / 12], device=device, dtype=dtype)
+            torch.tensor([4/5, -1/5, 4/105, -1/280], device=device, dtype=dtype)
             / dx[dim]
         )
-        fd2[0] += -5 / 2 / dx[dim] ** 2
-        fd2[1 + dim * 2 : 1 + (dim + 1) * 2] = (
-            torch.tensor([4 / 3, -1 / 12], device=device, dtype=dtype)
+        fd2[0] += -205 / 72 / dx[dim] ** 2
+        fd2[1 + dim * 4 : 1 + (dim + 1) * 4] = (
+            torch.tensor([8/5, -1/5, 8/315, -1/560], device=device, dtype=dtype)
             / dx[dim] ** 2
         )
 
@@ -538,7 +538,7 @@ class Pml(object):
             sigma[-fd_pad:] = sigma[-fd_pad - 1]
             return torch.tensor(sigma).to(model.dtype).to(model.device)
 
-        fd_pad = 2
+        fd_pad = 4
         sigma = []
         self.pml_width = model.pad_width - fd_pad
         for dim in range(model.ndim):
@@ -589,7 +589,7 @@ class Timestep(object):
 
 
 def zero_edges(arr, width):
-    fd_width = 2
+    fd_width = 4
     width = width + fd_width + 1
     arr[: width[0]] = 0.0
     arr[-width[1] :] = 0.0
