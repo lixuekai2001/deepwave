@@ -345,11 +345,11 @@ def _select_propagator(ndim, dtype, cuda):
     if cuda:
         if dtype == torch.float:
             if ndim == 1:
-                import scalar1d_gpu_iso_4_float as scalar_wrapper
+                import scalar1d_gpu_iso_8_float as scalar_wrapper
             elif ndim == 2:
-                import scalar2d_gpu_iso_4_float as scalar_wrapper
+                import scalar2d_gpu_iso_8_float as scalar_wrapper
             elif ndim == 3:
-                import scalar3d_gpu_iso_4_float as scalar_wrapper
+                import scalar3d_gpu_iso_8_float as scalar_wrapper
         elif dtype == torch.double:
             raise NotImplementedError(
                 "To enable double-precision GPU "
@@ -358,26 +358,26 @@ def _select_propagator(ndim, dtype, cuda):
                 "the CUDA portion of setup.py"
             )
             # if ndim == 1:
-            #    import scalar1d_gpu_iso_4_double as scalar_wrapper
+            #    import scalar1d_gpu_iso_8_double as scalar_wrapper
             # elif ndim == 2:
-            #    import scalar2d_gpu_iso_4_double as scalar_wrapper
+            #    import scalar2d_gpu_iso_8_double as scalar_wrapper
             # elif ndim == 3:
-            #    import scalar3d_gpu_iso_4_double as scalar_wrapper
+            #    import scalar3d_gpu_iso_8_double as scalar_wrapper
     else:
         if dtype == torch.float:
             if ndim == 1:
-                import scalar1d_cpu_iso_4_float as scalar_wrapper
+                import scalar1d_cpu_iso_8_float as scalar_wrapper
             elif ndim == 2:
-                import scalar2d_cpu_iso_4_float as scalar_wrapper
+                import scalar2d_cpu_iso_8_float as scalar_wrapper
             elif ndim == 3:
-                import scalar3d_cpu_iso_4_float as scalar_wrapper
+                import scalar3d_cpu_iso_8_float as scalar_wrapper
         elif dtype == torch.double:
             if ndim == 1:
-                import scalar1d_cpu_iso_4_double as scalar_wrapper
+                import scalar1d_cpu_iso_8_double as scalar_wrapper
             elif ndim == 2:
-                import scalar2d_cpu_iso_4_double as scalar_wrapper
+                import scalar2d_cpu_iso_8_double as scalar_wrapper
             elif ndim == 3:
-                import scalar3d_cpu_iso_4_double as scalar_wrapper
+                import scalar3d_cpu_iso_8_double as scalar_wrapper
 
     return scalar_wrapper
 
