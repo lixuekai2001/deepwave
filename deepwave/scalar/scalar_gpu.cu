@@ -843,8 +843,8 @@ static inline __device__ TYPE laplacian_3d(const TYPE * const arr,
 
 void setup(const TYPE * const fd1_d,
            const TYPE * const fd2_d) {
-  gpuErrchk(cudaMemcpyToSymbol(fd1, fd1_d, 2 * DIM * sizeof(TYPE)));
-  gpuErrchk(cudaMemcpyToSymbol(fd2, fd2_d, (2 * DIM + 1) * sizeof(TYPE)));
+  gpuErrchk(cudaMemcpyToSymbol(fd1, fd1_d, 4 * DIM * sizeof(TYPE)));
+  gpuErrchk(cudaMemcpyToSymbol(fd2, fd2_d, (4 * DIM + 1) * sizeof(TYPE)));
 }
 
 void __global__ add_sources_kernel(
